@@ -12,7 +12,16 @@
   </head>
   <body>
     <h1>Hello, world!</h1>
-    <button class="btn" onclick="listAlbum()">List Album</button>
+    <button class="btn btn-primary" onclick="displayAlbum()">List Album</button>
+
+     
+    <div class="container-xl justify-content-start" id="horizontal">
+        <div class="row row-cols-sm-2 row-cols-xs-1 row-cols-md-3 row-cols-lg-6">
+          
+            
+            </div>
+    </div>
+
     
     <div class="container-xl  d-flex flex-row ml-1" style="padding: 0px;" id="verticalCards">
         <div class="row row-cols-sm-2 row-cols-xs-1 row-cols-md-3 row-cols-lg-6">
@@ -22,6 +31,16 @@
             </div>
             </div>
     </div>
+
+    <div class="container-xl  d-flex flex-row ml-1" style="padding: 0px;" id="verticalCards">
+        <div id="albumrow" style="background-color: gray;"class="row row-cols-sm-2 row-cols-xs-1 row-cols-md-3 row-cols-lg-6">
+          
+            <div id= "albumcol"class="col">
+            
+            </div>
+            </div>
+    </div>
+
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -52,27 +71,28 @@
                 	console.error(err);
                 });
 
-                fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=metallica", {
-      "method": "GET",
-          "headers": {
-                       "x-rapidapi-key": "992d562612msh9ee2c45a2cf60d3p13dcd2jsn2bfe9003c0b8",
-                      "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
-                      }
+            }
+
+                fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=behemoth", {
+	                "method": "GET",
+	                    "headers": {
+                                     "x-rapidapi-key": "992d562612msh9ee2c45a2cf60d3p13dcd2jsn2bfe9003c0b8",
+	            	                "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+	                                }
                 })
-                    .then(response => {
-                    return response.json();
+                .then(response => {
+                	return response.json();
                 })
-                    .then(getAlbum => {
-                console.log(getAlbum);
-                for(const fetchedAlbum of getData.data){
-                 console.log(fetchedAlbum)
-                }
+                .then(getArtist => {
+                	console.log(getArtist);
+                    for(const horizonData of getArtist.data){
+                        displayHorizontally(horizonData)}
                 })
                 .catch(err => {
-                console.error(err);
+                	console.error(err);
                 });
 
-        }
+        
       
 
         function displayResult(fetchedData){
@@ -84,33 +104,72 @@
                     <img src="${fetchedData.album.cover}" class="card-img-top" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"  alt="...">
                 <div class="Verticalcard-body">
                     <h6 class="text-left card-titlepl-1 ml-2 mt-2">${fetchedData.album.title}</h6>
-                    <p style="font-size: small; text-align: left;" class="text-muted cardText card-text">${fetchedData.artist.title}</p>
+                    <p style="font-size: small; text-align: left;" class="text-muted cardText card-text">${fetchedData.artist.title_short}</p>
                         
-                          <p>${fetchedData.artist.link}</p>
+                          <p>${fetchedData.artist.duration}</p>
                   </div>
             </div>
+            </div>
+            `
+        }
+        function displayAlbum(){
+
+            fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=metallica", {
+      "method": "GET",
+          "headers": {
+                       "x-rapidapi-key": "992d562612msh9ee2c45a2cf60d3p13dcd2jsn2bfe9003c0b8",
+                      "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+                      }
+                })
+                    .then(response => {
+                    return response.json();
+                })
+                    .then(getAlbum => {
+                console.log(getAlbum);
+                for(const fetchedAlbum of getAlbum.data){
+                 listAlbum(fetchedAlbum)
+                }
+                })
+                .catch(err => {
+                console.error(err);
+                });
+        }
+        listAlbum=(fetchedAlbum)=>{
+            console.count()
+            
+            const row=document.querySelector(".albumrow")
+                albumrow.innerHTML +=`
+                <div class='col mb-3'>
+                    <div class="list-group">
+                        
+                    <a href="" class="list-group-item list-group-item-action">${fetchedAlbum.album.title}</a>
+                    
+                    </div>
             </div>
             `
         }
 
-         
-        function displayAlbum(fetchedAlbum){
-            //console.log(data);
-            const row=document.querySelector(".row")
-                row.innerHTML +=`
-                <div class='col mb-3'>
+        const displayHorizontally=(horizonData)=>{
+            const horizon = document.getElementById('horizontal')
+            horizon.innerHTML+=
+
+            `<div id="carouselExampleSlidesOnly" class="carousel slide h-50 " data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class='col mb-3'>
                 <div class="card w-100 h-100 cardVertical ">
-                    <img src="${fetchedData.album.cover}" class="card-img-top" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"  alt="...">
+                    <img src="${horizonData.album.cover}" class="card-img-top" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"  alt="...">
                 <div class="Verticalcard-body">
-                    <h6 class="text-left card-titlepl-1 ml-2 mt-2">${fetchedData.album.title}</h6>
-                    <p style="font-size: small; text-align: left;" class="text-muted cardText card-text">${fetchedData.artist.title}</p>
-                        
-                          <p>${fetchedData.artist.link}</p>
+                    <h6 class="text-left card-titlepl-1 ml-2 mt-2">${horizonData.album.title}</h6>
+                    
                   </div>
             </div>
             </div>
-            `
+                </div>
+            </div>`
         }
+
+         
+        
     
     </script>
   </body>
